@@ -90,12 +90,10 @@ int aplicar_efeitocruz(char tabuleiro[l][a], int linha,int coluna){
                         if(tabuleiro[nova_linha][nova_coluna] == '3'){
                             acertou_navio = 1;
                             printf("Voce acertou o navio nas coordenadas %d %d!\n",nova_linha,nova_coluna);
-                            pausar_tela();
-                            limpar_tela();
+                            
                         }
                         tabuleiro[nova_linha][nova_coluna] = '5';
-                        pausar_tela();
-                        limpar_tela();
+                        
                     }
                 }
             }
@@ -396,6 +394,7 @@ int colocar_diagonal2(int x, int y, int tamanho) {
                        imprimir_tabuleiro(tabuleiro);
                         printf("O efeito não atingiu nenhum objetivo\n");
                     }
+                    break;
                     //Inicializando o efeito octaedro
                     case 2: {
         printf("Voce escolheu o efeito octaedro. Escolha a coordenada central (ex:D7):\n");
@@ -436,7 +435,7 @@ int colocar_diagonal2(int x, int y, int tamanho) {
         int numero1;
         //Guardando os dados inseridos 
         scanf(" %c%d", &letra1, &numero1);
-        pausar_tela();
+        
         limpar_tela();
 
         //Verificando as coordenaddas inseridas
@@ -459,6 +458,7 @@ int colocar_diagonal2(int x, int y, int tamanho) {
     }
     default:
         printf("Opção inválida!\n");
+        break;
 }
                 
                         
