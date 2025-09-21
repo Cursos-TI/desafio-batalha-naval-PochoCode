@@ -1,174 +1,232 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-#define largo 10
-#define ancho 10
+#define l 10
+#define a 10
+//declarando a matriz tabuleiro
+char tabuleiro[l][a];
+
+// Criando uma função para inicializar o tabuleiro caso necessario
+void inicializar_tabuleiro(char tabuleiro[l][a]){
+    for(int i= 0; i < l ; i++){
+        for(int j = 0; j<a;j++){
+            tabuleiro[i][j]= '0';
+        }
+
+    }
+}
+
+// Criando uma função para imprimir o tabuleiro
+void imprimir_tabuleiro(char tabuleiro[l][a]){
+    printf("  ");
+    for(int j=0;j <a;j++){
+        printf("  %c",'A'+ j);
+    }
+    printf("\n"); 
+
+    for(int i=0;i<l;i++){
+        printf(" %d ",i);
+        for(int j=0;j < a;j++){
+          printf(" %c ",tabuleiro[i][j]);
+
+        }
+        printf("\n");
+    }
+}
+//Criando funções para posicionar os barcos
+//primeiro barco na vertical
+int colocar_vertical(int x, int y, int tamanho){
+    if(x+ tamanho <= a){
+        int ok = 1;
+        for(int i= 0;i< tamanho; i++){
+             if (tabuleiro[x+i][y] != '0') ok = 0;
+        if (ok) {
+            for (int i = 0; i < tamanho; i++) tabuleiro[x+i][y] = '3';
+            return 1;
+        }
+    }
+    }
+    if(x - tamanho+ 1 >=0){
+        int ok = 1;
+        for(int i = 0; i < tamanho;i++){
+        if (tabuleiro[x-i][y] != '0') ok = 0;
+        if (ok) {
+            for (int i = 0; i < tamanho; i++) tabuleiro[x-i][y] = '3';
+            return 1;
+        }
+    }
+    }
+    return 0;
+}
+
+//segundo na horizontal
+int colocar_horizontal(int x, int y, int tamanho) {
+    // tenta pra direita
+    if (y + tamanho <= l) {
+        int ok = 1;
+        for (int j = 0; j < tamanho; j++){
+            if (tabuleiro[x][y+j] != '0') ok = 0;
+        if (ok) {
+            for (int j = 0; j < tamanho; j++) tabuleiro[x][y+j] = '3';
+            return 1;
+        }
+    }
+    }
+    // tenta pra esquerda
+    if (y - tamanho + 1 >= 0) {
+        int ok = 1;
+        for (int j = 0; j < tamanho; j++)
+            if (tabuleiro[x][y-j] != '0') ok = 0;
+        if (ok) {
+            for (int j = 0; j < tamanho; j++) tabuleiro[x][y-j] = '3';
+            return 1;
+        }
+    }
+    return 0;
+}
+
+//tercero na diagonal
+ int colocar_diagonal1(int x, int y, int tamanho) {
+    // analisando a diagonal para baixo
+    if (x + tamanho <= a && y + tamanho <= l) {
+        int ok = 1;
+        for (int i = 0; i < tamanho; i++)
+            if (tabuleiro[x+i][y+i] != '0') ok = 0;
+        if (ok) {
+            for (int i = 0; i < tamanho; i++) tabuleiro[x+i][y+i] = '3';
+            return 1;
+        }
+    }
+    // analisando a diagonal para cima
+    if (x - tamanho + 1 >= 0 && y - tamanho + 1 >= 0) {
+        int ok = 1;
+        for (int i = 0; i < tamanho; i++)
+            if (tabuleiro[x-i][y-i] != '0') ok = 0;
+        if (ok) {
+            for (int i = 0; i < tamanho; i++) tabuleiro[x-i][y-i] = '3';
+            return 1;
+        }
+    }
+    return 0;
+}   
+
+//cuarto na diagonal
+int colocar_diagonal2(int x, int y, int tamanho) {
+    // analisar a diagonal para a entrada das coordenadas
+    if (x + tamanho <= a && y - tamanho + 1 >= 0) {
+        int ok = 1;
+        for (int i = 0; i < tamanho; i++)
+            if (tabuleiro[x+i][y-i] != '0') ok = 0;
+        if (ok) {
+            for (int i = 0; i < tamanho; i++) tabuleiro[x+i][y-i] = '3';
+            return 1;
+        }
+    }
+    // analisar a outra diagnal usando if
+    if (x - tamanho + 1 >= 0 && y + tamanho <= a) {
+        //declarando e inicialisando variavel para aplicação do efeito
+        int ok = 1;
+        //usando for para comprobar a diagonal
+        for (int i = 0; i < tamanho; i++)
+            if (tabuleiro[x-i][y+i] != '0') ok = 0;
+        if (ok) {
+            for (int i = 0; i < tamanho; i++) tabuleiro[x-i][y+i] = '3';
+            return 1;
+        }
+    }
+    return 0;
+}
 
 
 int main() {
-    char *tabuleiro[largo][ancho]; 
-    // Declarando navios
-    char *navio1[3] = {"3", "3", "3"}; // Navio de tamanho 3
-    char *navio2[3] = {"3", "3", "3"}; // Navio de tamanho 3
-    char *navio3[3] = {"3", "3", "3"}; // Navio de tamanho 3
-    char *navio4[3] = {"3", "3", "3"}; // Navio de tamanho 3
+    char tabuleiro[l][a]; 
+    
     char letra;
     int numero;
+    int coluna;
+    int linha;
     
 
   
     // Imprimir o tabuleiro com letras e numeros como coordenadas sendo as letras encima e do lado os numeros
     printf("   Batalha Naval\n");
     printf("   =============\n");
-   
-
-
-    printf("  ");
-    for(int j=0; j<ancho; j++){
-        printf(" %c ", 'A' + j);
+    //Inicializando tabuleiro
+    inicializar_tabuleiro(tabuleiro);
+    imprimir_tabuleiro(tabuleiro);
+    printf("A batalha Naval começou!\n");
+    printf("Você tem 2 navios para posicionar no tabuleiro.\n");
+     //Pedindo a entrada de dados
+    printf("Digite a coordenada inicial do navio vertical (ex: B 3): \n");
+    //Registrando a entrada dos dados
+    scanf(" %c %d", &letra, &coluna);
+      if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
+                printf("Coordenadas inválidas. Tente novamente.\n");
+                return 1;
+            }
+    //Transformando letra no  numeroda linha
+    linha = toupper(letra) - 'A';
+    //Logica de colocação do navio usando funções
+    if (!colocar_vertical(coluna, linha, 3)) {
+        printf("Nao coube vertical!\n");
+    }else{
+        colocar_vertical(coluna, linha, 3);
     }
-    printf("\n");
-    for(int i=0; i<largo; i++){
-        printf("%d ", i);
-        for(int j=0; j<ancho; j++){
-         
-            tabuleiro[i][j] = "0"; // Inicializando todas as posições com água
-          
-            printf(" %s ", tabuleiro[i][j]);
-        }
 
-        printf("\n");
-        }
-         printf("A batalha Naval começou!\n");
-         printf("Você tem 2 navios para posicionar no tabuleiro.\n");
-         printf("Escolha suas coordenadas para o primeiro Navio na horizontal usando letra(A-J) e numeros(0-9):\n");
-         scanf(" %c%d", &letra, &numero);
-         //validando coordenadas
-         if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
-            printf("Coordenadas inválidas. Tente novamente.\n");
-            return 1;
-          }
-          // convertendo letra para número da coluna
-            int coluna = letra - 'A';
-            // evitar sobreposição de navios
-            if(tabuleiro[numero][coluna] != "0" || tabuleiro[numero][coluna + 1] != "0" || tabuleiro[numero][coluna + 2] != "0") {
-                printf("Posição já ocupada por outro navio. Tente novamente.\n");
-                return 1;
-            }
-            // verificando se o navio cabe na posição
-            if(coluna + 2 < ancho) {
-                tabuleiro[numero][coluna] = navio1[0];
-                tabuleiro[numero][coluna + 1] = navio1[1];
-                tabuleiro[numero][coluna + 2] = navio1[2];
-            } else {
-                printf("Navio não cabe nessa posição. Tente novamente.\n");
-                return 1;
-            }
-            printf("Primeiro navio posicionado em %c%d, %c%d, %c%d\n", letra, numero, letra + 1, numero, letra + 2, numero);
-            // segundo navio na vertical
-            printf("Escolha suas coordenadas para o segundo Navio na vertical usando letra(A-J) e numeros(0-9):\n");
-            //lendo coordenadas do segundo navio
-            scanf(" %c%d", &letra, &numero);
-            //validando coordenadas
-            if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
-                printf("Coordenadas inválidas. Tente novamente.\n");
-                return 1;
-            }
-            // convertendo letra para número da coluna
-            coluna = letra - 'A';
-            // evitar sobreposição de navios
-            if(tabuleiro[numero][coluna] != "0" || tabuleiro[numero + 1][coluna] != "0" || tabuleiro[numero + 2][coluna] != "0") {
-                printf("Posição já ocupada por outro navio. Tente novamente.\n");
-                return 1;
-            }
-            // verificando se o navio cabe na posição
-            if(numero + 2 < largo) {
-                tabuleiro[numero][coluna] = navio2[0];
-                tabuleiro[numero + 1][coluna] = navio2[1];
-                tabuleiro[numero + 2][coluna] = navio2[2];
-            } else {
-                printf("Navio não cabe nessa posição. Tente novamente.\n");
-                return 1;
-            }
-            printf("Segundo navio posicionado em %c%d, %c%d, %c%d\n", letra, numero, letra, numero + 1, letra, numero + 2);
-
-            //posicionando o terceiro e quarto navio nas diagonais
-            printf("Escolha em qual diagonal você quer posicionar o terceiro navio com a primeira coordenada da diagonal(A-J)(1-9):\n");
-            
-            scanf(" %c%d", &letra, &numero);
-            //validando coordenadas
-            if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
-                printf("Coordenadas inválidas. Tente novamente.\n");
-                return 1;
-            }
-            // convertendo letra para número da coluna
-            coluna = letra - 'A';
-            // evitar sobreposição de navios
-            if((tabuleiro[numero][coluna] != "0" || tabuleiro[numero + 1][coluna + 1] != "0" || tabuleiro[numero + 2][coluna + 2] != "0")&&(tabuleiro[numero][coluna] != "0" || tabuleiro[numero + 1][coluna - 1] != "0" || tabuleiro[numero + 2][coluna - 2] != "0")) {
-                printf("Posição já ocupada por outro navio. Tente novamente.\n");
-                return 1;
-            }
-            // verificando se o navio cabe na posição
-            if(numero + 2 < largo && coluna + 2 < ancho) {
-                tabuleiro[numero][coluna] = navio3[0];
-                tabuleiro[numero + 1][coluna + 1] = navio3[1];
-                tabuleiro[numero + 2][coluna + 2] = navio3[2];
-            } else if(numero + 2 < largo && coluna - 2 >= 0){
-                tabuleiro[numero][coluna] = navio4[0];
-                tabuleiro[numero + 1][coluna - 1] = navio4[1];
-                tabuleiro[numero + 2][coluna - 2] = navio4[2];
-            }else {
-                printf("Navio não cabe nessa posição. Tente novamente.\n");
-                return 1;
-            }
-            printf("Terceiro navio posicionado em %c%d, %c%d, %c%d\n", letra, numero, letra + 1, numero + 1, letra + 2, numero + 2);
-            // quarto navio na diagonal oposta
-            printf("Escolha em qual diagonal você quer posicionar o quarto navio com a primeira coordenada da diagonal(A-J)(1-9):\n");
-            scanf(" %c%d", &letra, &numero);
-            //validando coordenadas
-            if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
-                printf("Coordenadas inválidas. Tente novamente.\n");
-                return 1;
-            }
-            // convertendo letra para número da coluna
-            coluna = letra - 'A';
-            // evitar sobreposição de navios
-            if((tabuleiro[numero][coluna] != "0" || tabuleiro[numero + 1][coluna - 1] != "0" || tabuleiro[numero + 2][coluna - 2] != "0")&&(tabuleiro[numero][coluna] != "0" || tabuleiro[numero + 1][coluna + 1] != "0" || tabuleiro[numero + 2][coluna + 2] != "0")) {
-                printf("Posição já ocupada por outro navio. Tente novamente.\n");
-                return 1;
-            }
-            // verificando se o navio cabe na posição
-            if(numero + 2 < largo && coluna - 2 >= 0) {
-                tabuleiro[numero][coluna] = navio4[0];
-                tabuleiro[numero + 1][coluna - 1] = navio4[1];
-                tabuleiro[numero + 2][coluna - 2] = navio4[2];
-            } else if(numero + 2 < largo && coluna + 2 < ancho){
-                tabuleiro[numero][coluna] = navio3[0];
-                tabuleiro[numero + 1][coluna + 1] = navio3[1];
-                tabuleiro[numero + 2][coluna + 2] = navio3[2];
-            } else {
-                printf("Navio não cabe nessa posição. Tente novamente.\n");
-                return 1;
-            }
-            printf("Quarto navio posicionado em %c%d, %c%d, %c%d\n", letra, numero, letra - 1, numero + 1, letra - 2, numero + 2);
-
-            // Imprimir o tabuleiro atualizado
-            printf("Tabuleiro atualizado:\n");
-            printf("  ");
-            for(int j=0; j<ancho; j++){
-                printf(" %c ", 'A' + j);
-            }
-            printf("\n");
-            for(int i=0; i<largo; i++){
-                printf("%d ", i);
-                for(int j=0; j<ancho; j++){
-                    printf(" %s ", tabuleiro[i][j]);
-                }
-                printf("\n");
-            }
+    //imprimindo o tabuleiro atualizado
+    imprimir_tabuleiro(tabuleiro);
         
+     // colocando navio horizontal
+    printf("\nDigite a coordenada inicial do navio horizontal (ex: C 5): ");
+    //Registrando as coordenadas introdycidas
+    scanf(" %c %d", &letra, &coluna);
+    if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
+                printf("Coordenadas inválidas. Tente novamente.\n");
+                return 1;
+            }
+    //Transformando a letra no numero de linha
+    linha = toupper(letra) - 'A';
+    //Logica da colocação do navio na horizontal usando as funções previamente declaradas
+    if (!colocar_horizontal(coluna, linha, 3)) {
+        printf("Nao coube horizontal!\n");
+    }else{
+        colocar_horizontal(coluna, linha, 3);
+    }
+    //Imprimindo tabuleiro atualizado
 
+    imprimir_tabuleiro(tabuleiro); // colocando navio horizontal
+    
+           
+ // colocando navio nas diagonais
+    printf("\nDigite a coordenada inicial do navio diagonal 1: ");
+    //Guardando as coordenadas introducidas
+    scanf(" %c %d", &letra, &coluna);
+    if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
+                printf("Coordenadas inválidas. Tente novamente.\n");
+                return 1;
+          
+    // colocando mais um navio na diagonal  
+    printf("\nDigite a coordenada inicial do navio diagonal 2: ");
+    //Guardando as coordenadas introducidas
+    scanf(" %c %d", &letra, &coluna);
+    if((letra < 'A' || letra > 'J') || (numero < 0 || numero > 9)) {
+                printf("Coordenadas inválidas. Tente novamente.\n");
+                return 1;
+            }
+    //Convertendo a letra no numero de linha
+    linha = toupper(letra) - 'A';
+    //logica de colocação do navio usando funções
+    if (!colocar_diagonal2(coluna, linha, 3)) {
+        printf("Nao coube diagonal 2!\n");
+    }else{
+        colocar_diagonal2(coluna, linha, 3);
+    }
+    //Imprimindo o tabuleiro atualizado
+    imprimir_tabuleiro(tabuleiro);  }
+    
+   
      return 0;
 
 }
