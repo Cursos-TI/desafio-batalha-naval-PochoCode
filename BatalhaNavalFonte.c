@@ -6,8 +6,8 @@
 
 //Criando uma função para pausar a tela
 void pausar_tela() {
-    printf("\nPressione ENTER para continuar...");
-    while(getchar() != '\n'); // limpa buffer
+    printf("Pressione ENTER para continuar...\n");
+    
     getchar(); // espera ENTER
 }
 //criando uma função para limpar a tela
@@ -292,6 +292,8 @@ int colocar_diagonal2(int x, int y, int tamanho) {
     printf("A batalha Naval começou!\n");
     printf("Você tem 2 navios para posicionar no tabuleiro.\n");
     //Pedindo a entrada de dados
+    pausar_tela();
+    limpar_tela();
     printf("Digite a coordenada inicial do navio vertical (ex: B 3): \n");
     //Registrando a entrada dos dados
     scanf(" %c %d", &letra, &coluna);
@@ -306,6 +308,8 @@ int colocar_diagonal2(int x, int y, int tamanho) {
 
     //imprimindo o tabuleiro atualizado
     imprimir_tabuleiro(tabuleiro);
+    pausar_tela();
+    limpar_tela();
 
     // colocando navio horizontal
     printf("\nDigite a coordenada inicial do navio horizontal (ex: C 5): ");
@@ -322,6 +326,9 @@ int colocar_diagonal2(int x, int y, int tamanho) {
     }
     //Imprimindo tabuleiro atualizado
     imprimir_tabuleiro(tabuleiro);
+    pausar_tela();
+    limpar_tela();
+
     // colocando navio nas diagonais
     printf("\nDigite a coordenada inicial do navio diagonal 1: ");
     //Guardando as coordenadas introducidas
@@ -336,7 +343,8 @@ int colocar_diagonal2(int x, int y, int tamanho) {
     }
     //imprimindo tabuleiro atualizado
     imprimir_tabuleiro(tabuleiro);
-
+    pausar_tela();
+    limpar_tela();
     // colocando mais um navio na diagonal  
     printf("\nDigite a coordenada inicial do navio diagonal 2: ");
     //Guardando as coordenadas introducidas
@@ -351,6 +359,9 @@ int colocar_diagonal2(int x, int y, int tamanho) {
     }
     //Imprimindo o tabuleiro atualizado
     imprimir_tabuleiro(tabuleiro);
+    pausar_tela();
+    limpar_tela();
+
         //Inicializando a aplicação dos efeitos
         printf("Escolha um effeito especial para usar\n");
         printf("1. Efeito Cruz\n");
@@ -393,6 +404,7 @@ int colocar_diagonal2(int x, int y, int tamanho) {
                     }else{
                        imprimir_tabuleiro(tabuleiro);
                         printf("O efeito não atingiu nenhum objetivo\n");
+                        return 1;
                     }
                     break;
                     //Inicializando o efeito octaedro
@@ -423,6 +435,7 @@ int colocar_diagonal2(int x, int y, int tamanho) {
         }else{
             imprimir_tabuleiro(tabuleiro);
             printf("O efeito octaedro não acertou nada\n");
+            return 1;
         }
         break;
     }
@@ -453,6 +466,7 @@ int colocar_diagonal2(int x, int y, int tamanho) {
             printf("O efeito cone acertou um ou mais navios\n");
         }else{
             printf("O efeito cone não acertou nada\n");
+            return 1;
         }
         break;
     }
@@ -462,8 +476,6 @@ int colocar_diagonal2(int x, int y, int tamanho) {
 }
                 
                         
-        
-
-     return 0;
+    return 0;
 
 }
